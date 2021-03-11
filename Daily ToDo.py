@@ -2,7 +2,7 @@
 #Simple version
 ##
 #list of tuples of tasks with start time
-#Q - does tuple support datetime object - YES(hours later - thank you ADHD-Sama!)
+#Q - does tuple hold datetime object? - YES
 #Takes in list with start time.
 #When task is done it is written into the text file with the total time taken.
 #This can serve as function in more complex program.
@@ -16,8 +16,8 @@
 #6. DONE - For both this version AND "SIMPLE" version - allow for aborting the loop if you can't complete all the tasks so you can at least update progress.
 # -> Perhaps create a persistant list that can be reaccessed later in
 # 7. DONE - For ALL versions, in "dolist" clean up that awful for loop(change to while?) and put in some imput validation.
-# Also, consider a shrinking list. => actually this is easy... i = 0; then increment my one and print.
-# 8. 
+# 8. Also, consider a shrinking list. => actually this is easy... i = 0; then increment my one and print. - DONE
+
 import datetime, time
 import os
 from calendar import month_name #list of 13 strings [0] = "", [1] = "January"
