@@ -22,3 +22,12 @@
 ->Tomorrow List(So that the user can plan out their day ahead of time)
 
 ->Deadlines(AKA long term tasks. User can add tasks to this list to work on later, or if they want to be reminded of a task in the future.) - Not a replacement for your calendar.
+
+# Advanced To-Do
+-Several new features persistant data types: 
+
+->Sublist functions that allows users to break a complex task into simple steps
+
+->Timer function that the user can select
+
+-> Autojournal functionality, where the user puts in a comment after completing a task. 
