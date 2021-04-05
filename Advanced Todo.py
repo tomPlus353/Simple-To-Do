@@ -46,15 +46,18 @@ def menu(dailies,tomorrowList, uncompleted,deadline):
         choice = menuList[int(choice)-1] #switch out index for string
         #actual selection. Careful when adding new menu options as we are using changable list indexes, not dictionary keys.
         if choice == menuList[0]:
+            #1. Create new list.
             completedList, uncompleted, deadline = quickList(uncompleted)
             print(f"You have {len(uncompleted)} tasks left")
             syncUncompleted(uncompleted)
         elif choice == menuList[1]:
+            #2. Create list for tomorrow.
             tomorrowList = buildTomorrow(tomorrowList)
             #saves data to the shelve
             syncTomorrow(tomorrowList)
             print("List for tomorrow saved to database.")
         elif choice == menuList[2]:
+            #3. Load list made yesterday
             completedList, uncompleted = doList(tomorrowList,uncompleted) #tomorrow list becomes a regular "taskList" from this point on.
             syncUncompleted(uncompleted)
             print(f"You have {len(uncompleted)} tasks left")
@@ -76,21 +79,28 @@ def menu(dailies,tomorrowList, uncompleted,deadline):
                 elif answer.lower() == "n":
                     break
         elif choice == menuList[3]:
+            #4. Review current daily tasks
             dailies = reviewDailies(dailies)
         elif choice == menuList[4]:
+            #5. Add new daily tasks
             dailies = addDailies(dailies)
         elif choice == menuList[5]:
+            #6. See Uncompleted Tasks
             for task in uncompleted:
                 print(f"{uncompleted.index(task) + 1}. {task[0]}")
             print(f"You have {len(uncompleted)} tasks left")
             time.sleep(2)
         elif choice == menuList[6]:
+            #7. Move Current Task to Long-Term Tasks
             deadline, uncompleted = moveToLongList(deadline, uncompleted)
         elif choice == menuList[7]:
+            #8. Create new tasks and add to Long-Term Task
             deadline = appendLongList(deadline)
         elif choice == menuList[8]:
+            #9. Report completion of Long-Term Tasks
             deadline = doLongList(deadline)
         elif choice == menuList[9]:
+            #10. Exit
             print("Exiting program")
             break #exit has been pressed
         
@@ -174,35 +184,37 @@ def buildList(uncompleted):
 def buildTomorrow(tomorrowList):
     print("Building List for Tomorrow")
     time.sleep(0.3)
-    if len(tomorrowList) > 0:
-        print("You already have a list for tomorrow")
-        print(f"Here are your {len(tomorrowList)} tasks.")
-        for task in tomorrowList:
-            print(f"{tomorrowList.index(task) + 1}. {task[0]}")
-        answer = ""
-        while answer.lower() != "y" or "n":
-            answer = input("Do you want to delete and start over? \nEnter [y] to delete this list and build a new one.\nEnter [n] to return to the main menu.")
-            if answer.lower() == "y":
-                tomorrowList.clear()
-                print("List deleted")
-                buildTomorrow(tomorrowList)
-            #no need for else statement, the program will revert back to while loop in menu if the answer is "n"
-    else:
-        tomorrowList = autoAdd(dailies, uncompleted, tomorrowList)
-        print("Add tasks. Enter \"stop\" when you are done.")
-        time.sleep(0.3)
-        testTuple = ("",None)
-        while testTuple[0].lower() != "stop":
-            testTuple = (input("what task do you want to add?"),microSecSlicer(datetime.datetime.now()))
-            if testTuple[0].lower() == "stop":
-                continue
-            else:
-                tomorrowList.append(testTuple)
-                print(f"{testTuple[0]} is added to your tasks at {testTuple[1]}.")
+    while True: # infinite loop. Need to use 'break' keyword to get out of this.
         if len(tomorrowList) > 0:
-            return tomorrowList
+            print("You already have a list for tomorrow")
+            print(f"Here are your {len(tomorrowList)} tasks.")
+            for task in tomorrowList:
+                print(f"{tomorrowList.index(task) + 1}. {task[0]}")
+            answer = ""
+            while answer.lower() not in ["y", "n"]:
+                answer = input("Do you want to delete and start over? \nEnter [y] to delete this list and build a new one.\nEnter [n] to return to the main menu.")
+                if answer.lower() == "y":
+                    tomorrowList.clear()
+                    print("List deleted")
+                    buildTomorrow(tomorrowList)
+                elif answer.lower() == 'n':
+                    break
         else:
-            print("No items added to your list for tomorrow")
+            tomorrowList = autoAdd(dailies, uncompleted, tomorrowList)
+            print("Add tasks. Enter \"stop\" when you are done.")
+            time.sleep(0.3)
+            testTuple = ("",None)
+            while testTuple[0].lower() != "stop":
+                testTuple = (input("what task do you want to add?"),microSecSlicer(datetime.datetime.now()))
+                if testTuple[0].lower() == "stop":
+                    continue
+                else:
+                    tomorrowList.append(testTuple)
+                    print(f"{testTuple[0]} is added to your tasks at {testTuple[1]}.")
+            if len(tomorrowList) > 0:
+                return tomorrowList
+            else:
+                print("No items added to your list for tomorrow")
 
 def doList(taskList, uncompleted):
     ###NOTE - ADAPT this code to return UNCOMPLETED tasks - DONE
@@ -260,13 +272,18 @@ def doList(taskList, uncompleted):
             elif update.isdecimal() == True:
                 #essentially we are accessing the phantom list: "tasks in taskList but not in completedTasks"
                 update = int(update) - 1 # recieves reference to the phantom list
-                taskToUpdate = [task for task in taskList if task not in completedTasks][update] # needs to be assigned before we alter the phantomlist in next line
-                completedTasks.append(taskToUpdate) #NOTE, THIS MODIFIES THE PHANTOM LIST
-                updateLog(taskToUpdate) #updates log once task has been logged to the system
-                checkAllDailies(dailies,completedTasks)
-                bar.next()
-                print('\n')
+                if update in range(len([task for task in taskList if task not in completedTasks])):
+                    taskToUpdate = [task for task in taskList if task not in completedTasks][update] # needs to be assigned before we alter the phantomlist in next line
+                    completedTasks.append(taskToUpdate) #NOTE, THIS MODIFIES THE PHANTOM LIST
+                    updateLog(taskToUpdate) #updates log once task has been logged to the system
+                    checkAllDailies(dailies,completedTasks)
+                    bar.next()
+                    print('\n')
+                else:
+                    print("Your choice is out of range")
+                    continue
             else: # if input is not correct
+                print("Invalid input")
                 continue
     if len(completedTasks) == len(taskList):
         print("All tasks completed")
@@ -506,7 +523,9 @@ def checkAllDailies(dailies,completed):
         completedList.append(t[0])
     completedDailies = set([t for t in completedList if t in dailies])
     if len(completedDailies) == len(dailies):
+        time.sleep(1)
         print('Well Done, you completed all daily tasks!')
+        time.sleep(1)
         now = microSecSlicer(datetime.datetime.now())
         todo = open(f'Todo list - quicklist - {now.year}-{now.month}-{now.day}.txt', 'a')
         todo.write(f'Well Done! You completed all {len(dailies)} daily tasks')
