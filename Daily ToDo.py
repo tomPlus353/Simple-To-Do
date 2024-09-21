@@ -2,7 +2,7 @@
 #Simple version
 ##
 #list of tuples of tasks with start time
-#Q - does tuple support datetime object - YES(hours later - thank you ADHD-Sama!)
+#Q - does tuple support datetime object - yes
 #Takes in list with start time.
 #When task is done it is written into the text file with the total time taken.
 #This can serve as function in more complex program.
