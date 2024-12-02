@@ -25,7 +25,6 @@ from calendar import month_name #list of 13 strings [0] = "", [1] = "January"
 import shelve # For persistance: (dailies(list of strings, no need for tuples yet), tomorrow's list(same), uncompleted tasks/leftover tasks)
 
 from progress.bar import ChargingBar
-os.chdir('c:\\Users\\tomas\\Desktop\\Anti-Procrastination')
 
 
 data = shelve.open('Persistant Data') #"dailies","tomorrowList","uncompleted","deadline"
