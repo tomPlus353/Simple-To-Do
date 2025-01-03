@@ -51,7 +51,7 @@ def menu(dailies,tomorrowList, uncompleted,deadline):
         print(f"You have {len(uncompleted)} regular tasks and {len(deadline)} Long-Term Tasks left.")
         for option in menuList:
             print(f"{menuList.index(option) + 1}. {option}")
-        choice = input("Enter the number of your choice")
+        choice = input("Enter the number of your choice\n")
         isValid = False # user input must meet certain criteria to change this to True and escape the loop
         while isValid == False:
             if choice.isalpha() == False and choice.isdecimal() == True:
@@ -62,7 +62,7 @@ def menu(dailies,tomorrowList, uncompleted,deadline):
                     print("Your number is out of range. Try again.")
             else:
                 print("Not a positive number. Enter a number")
-            choice = input("Enter the number of your choice")
+            choice = input("Enter the number of your choice\n")
         choice = menuList[int(choice)-1] #switch out index for string
         #actual selection. Careful when adding new menu options as we are using changable list indexes, not dictionary keys.
         if choice == menuList[0]:
@@ -86,7 +86,7 @@ def menu(dailies,tomorrowList, uncompleted,deadline):
                 print(f"You completed {len(completedList)} and have {len(tasksRemaining)}.")
             answer = ""
             while answer != "y" or answer.lower() != "n":
-                answer = input("Are you finished with this list? \nEnter [y] to delete this list.\nEnter [n] to return to the main menu.")
+                answer = input("Are you finished with this list? \nEnter [y] to delete this list.\nEnter [n] to return to the main menu.\n")
                 if answer.lower() == "y":
                     tomorrowList.clear()
                     syncTomorrow(tomorrowList)
@@ -138,9 +138,9 @@ def autoAdd(d,u,t):
 
 def autoDailies(t,d):
     counter = 0
-    yesOrNo = input(f"Do you wish to add your {len(d)} dailies?")
+    yesOrNo = input(f"Do you wish to add your {len(d)} dailies?\n")
     while yesOrNo.lower() not in ['yes','y','no','n']:
-        yesOrNo = input(f"Do you wish to add your {len(d)} dailies?")
+        yesOrNo = input(f"Do you wish to add your {len(d)} dailies?\n")
     if yesOrNo.lower() in ["yes","y"]:
         for task in d:
             t.append((task,microSecSlicer(datetime.datetime.now())))
@@ -193,7 +193,7 @@ def buildList(uncompleted):
     time.sleep(0.3)
     testTuple = ("",None)
     while testTuple[0].lower() != "stop":
-        testTuple = (input("what task do you want to add?"),microSecSlicer(datetime.datetime.now()))
+        testTuple = (input("what task do you want to add?\n"),microSecSlicer(datetime.datetime.now()))
         if testTuple[0].lower() == "stop":
             continue
         else:
@@ -211,7 +211,7 @@ def buildTomorrow(tomorrowList):
             print(f"{tomorrowList.index(task) + 1}. {task[0]}")
         answer = ""
         while answer.lower() != "y" or "n":
-            answer = input("Do you want to delete and start over? \nEnter [y] to delete this list and build a new one.\nEnter [n] to return to the main menu.")
+            answer = input("Do you want to delete and start over? \nEnter [y] to delete this list and build a new one.\nEnter [n] to return to the main menu.\n")
             if answer.lower() == "y":
                 tomorrowList.clear()
                 print("List deleted")
@@ -223,7 +223,7 @@ def buildTomorrow(tomorrowList):
         time.sleep(0.3)
         testTuple = ("",None)
         while testTuple[0].lower() != "stop":
-            testTuple = (input("what task do you want to add?"),microSecSlicer(datetime.datetime.now()))
+            testTuple = (input("what task do you want to add?\n"),microSecSlicer(datetime.datetime.now()))
             if testTuple[0].lower() == "stop":
                 continue
             else:
@@ -262,12 +262,12 @@ def doList(taskList, uncompleted):
                         print(f"{counter}. {task[0]}")
                     return completedTasks, uncompleted, deadline
                 else:
-                    input("Something went wrong. Save your uncompleted tasks into a text file manually.\nPress enter when you are done.")
+                    input("Something went wrong. Save your uncompleted tasks into a text file manually.\nPress enter when you are done.\n")
                     raise ArithmeticError
             elif update.lower() == 'focus':
                 light = 'green'
                 while light == 'green':
-                    update2 = input('Select the task to focus on with timer')
+                    update2 = input('Select the task to focus on with timer\n')
                     if update2.isdecimal() == True:
                         if int(update) in range(len([task for task in taskList if task not in completedTasks])):
                             light = 'red'
@@ -276,7 +276,7 @@ def doList(taskList, uncompleted):
             elif update.lower() == 'sublist':
                 light = 'green'
                 while light == 'green':
-                    update2 = input('Select the task to focus on with a sublist')
+                    update2 = input('Select the task to focus on with a sublist\n')
                     if update2.isdecimal() == True:
                         if int(update) in range(len([task for task in taskList if task not in completedTasks])):
                             light = 'red'
@@ -317,8 +317,8 @@ def doList(taskList, uncompleted):
 def timer(task): #input 
     print(f"Ok! Let's focus on your task: '{task[0]}'!")
     print("First, let's set a timer.")
-    minutes = int(input('How many minutes?'))
-    seconds = int(input('How many seconds?'))
+    minutes = int(input('How many minutes?\n'))
+    seconds = int(input('How many seconds?\n'))
     print(f"You have {minutes} minutes and {seconds} left to complete the task:'{task[0]}'!")
     timeRemaining = minutes * 60 + seconds
     while timeRemaining > -1:
@@ -332,7 +332,7 @@ def subList(task):
     subTasks = []
     entry = ""
     while entry.lower() != "stop":
-        entry = (input("what task do you want to add?"))
+        entry = (input("what task do you want to add?\n"))
         if entry.lower() == "stop":
             continue
         else:
@@ -343,7 +343,7 @@ def subList(task):
         while len(subTasks) > 0:
             for subTask in subTasks:
                 print(f"{subTask.index(subTask) + 1}.{subT}")
-            update = input('Enter the number of sub-task completed.')
+            update = input('Enter the number of sub-task completed.\n')
             if update.isnum() == True:
                 if int(update) in range(1,len(subTasks)+1):
                     subTasks.remove()
@@ -354,7 +354,7 @@ def doLongList(deadline):
     while len(deadline) > 0:
         for task in deadline:
             print(f"{deadline.index(task)+1}. {task[0]}\nDate Due: {task[1]}")
-        taskNum = input("Enter the number of the task you have completed. Enter /stop/(lower case) to return to main menu.")
+        taskNum = input("Enter the number of the task you have completed. Enter /stop/(lower case) to return to main menu.\n")
         if taskNum == 'stop':
             return deadline
         valid = False
@@ -364,7 +364,7 @@ def doLongList(deadline):
                     taskNum = int(taskNum) - 1
                     valid = True #breaks loop if input is number and in range of the length of deadline
                     continue
-            taskNum = input("Enter the number of the task you have completed. Enter /stop/(lower case) to return to main menu.")
+            taskNum = input("Enter the number of the task you have completed. Enter /stop/(lower case) to return to main menu.\n")
         updateLog(deadline[taskNum])
         deadline.pop(taskNum)
         syncDeadline(deadline)
@@ -413,7 +413,7 @@ def reviewDailies(dailies): #read and delete individual elements
 def addDailies(dailies):
     newTask = ""
     while newTask.lower() != "stop":
-        newTask = input("What task do you want to add?(enter \"stop\" to return to main menu.)")
+        newTask = input("What task do you want to add?(enter \"stop\" to return to main menu.)\n")
         if newTask.lower() == "stop":
             continue
         else:
@@ -432,7 +432,7 @@ def moveToLongList(deadline, uncompleted): #moves items from uncompleted to long
             print(f"{uncompleted.index(task) + 1}. {task[0]}: Date Added: {task[1]}")
             if len(uncompleted) == 0:
                 print("Sorry, no tasks found")
-        answer = input("Enter \"stop\" to exit. Or enter the number of the task you wish to move to long list.")
+        answer = input("Enter \"stop\" to exit. Or enter the number of the task you wish to move to long list.\n")
         if answer.lower() == "stop":
             continue
         elif int(answer) - 1 in range(len(uncompleted)):
@@ -452,7 +452,7 @@ def appendLongList(deadline):
             print(f"{deadline.index(task) + 1}. {task[0]}: Deadline: {task[1]}")
     newTask = ""
     while newTask.lower() != "stop":
-        newTask = input("What task do you want to add?(enter \"stop\" to return to main menu.)")
+        newTask = input("What task do you want to add?(enter \"stop\" to return to main menu.)\n")
         if newTask.lower() == "stop":
             continue
         else:
@@ -468,7 +468,7 @@ def getDeadline():
     print("Choose your deadline")
     now = microSecSlicer(datetime.datetime.now())
     possDeadlines = {"year": datetime.timedelta(days=365), "month": datetime.timedelta(days=31), "week": datetime.timedelta(weeks=1), "day": datetime.timedelta(days=1)}
-    userInput = input("Choose how long you need to do the task.\n/year/\n/month/\n/week/\n/day/\n/other/")
+    userInput = input("Choose how long you need to do the task.\n/year/\n/month/\n/week/\n/day/\n/other/\n")
     if userInput.lower() not in list(possDeadlines.keys()) + ['other']:
         print('Incorrect input')
         date1 = getDeadline()
