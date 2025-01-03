@@ -7,7 +7,7 @@ from progress.bar import ChargingBar
 
 
 
-data = shelve.open('Persistant Data') #"dailies","tomorrowList","uncompleted","deadline"
+data = shelve.open('persistant_data') #"dailies","tomorrowList","uncompleted","deadline"
 if "dailies" not in list(data.keys()):
     data["dailies"] = []
 dailies = data["dailies"]
@@ -367,22 +367,22 @@ def doLongList(deadline):
 
 #three syncing methods for making any change to these variables persistant and keeping the database closed when not necessary
 def syncTomorrow(tomorrowList):
-    data = shelve.open('Persistant Data')
+    data = shelve.open('persistant_data')
     data['tomorrowList'] = tomorrowList
     data.close()
     print('List for tomorrow synced to database')
 def syncDailies(dailies):
-    data = shelve.open('Persistant Data')
+    data = shelve.open('persistant_data')
     data['dailies'] = dailies
     data.close()
     print('Dailies synced to database')
 def syncUncompleted(uncompleted):
-    data = shelve.open('Persistant Data')
+    data = shelve.open('persistant_data')
     data['uncompleted'] = uncompleted
     data.close()
     print('Uncompleted tasks synced to database')
 def syncDeadline(deadline):
-    data = shelve.open('Persistant Data')
+    data = shelve.open('persistant_data')
     data['deadline'] = deadline
     data.close()
     print('Deadlines synced to database')
